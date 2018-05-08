@@ -4,8 +4,6 @@ import messages from "./data/messages.json";
 import { User } from "./components/User";
 import { Message } from "./components/Message";
 
-console.log(users, messages);
-
 export class App extends React.Component {
   render() {
     return (
