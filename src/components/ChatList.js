@@ -3,18 +3,14 @@ import styled from "react-emotion";
 import { Message } from "./Message";
 
 const Wrapper = styled("div")({
-  maxWidth: "600px"
+  display: "flex",
+  flex: 1,
+  overflow: "auto",
+  flexDirection: "column-reverse"
 });
 
-const userMap = new Map();
-
 const searchUser = (users, userId) => {
-  if (userMap.has(userId)) {
-    return userMap.get(userId);
-  }
-
   const user = users.find(({ id }) => userId === id) || {};
-  userMap.set(userId, user);
 
   return user;
 };
