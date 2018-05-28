@@ -6,7 +6,8 @@ const Wrapper = styled("div")({
   display: "flex",
   flex: 1,
   overflow: "auto",
-  flexDirection: "column-reverse"
+  flexDirection: "column",
+  paddingTop: "10px"
 });
 
 const searchUser = (users, userId) => {
@@ -17,7 +18,7 @@ const searchUser = (users, userId) => {
 
 export const ChatList = ({ users, messages }) => (
   <Wrapper>
-    {messages.map((message, index) => {
+    {messages.reverse().map((message, index) => {
       const user = searchUser(users, message.user);
       return <Message key={index} {...message} user={user} />;
     })}
