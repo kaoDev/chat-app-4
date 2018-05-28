@@ -1,5 +1,5 @@
-import { Subject, from } from "rxjs";
-import { scan, merge, map } from "rxjs/operators";
+import { Subject, from, BehaviorSubject } from "rxjs";
+import { scan, merge, map, combineLatest } from "rxjs/operators";
 import messagesJson from "./data/messages.json";
 import usersJson from "./data/users.json";
 
@@ -9,6 +9,19 @@ const initialUsers = from(usersJson);
 export const createStateManager = () => {
   const messagesInput = new Subject();
   const usersInput = new Subject();
+
+  // BehaviorSubjects holds one value
+  const userName = new BehaviorSubject("");
+  const profilePic = new BehaviorSubject("");
+  const joined = new BehaviorSubject(false);
+
+  const loginState = userName.pipe(
+    combineLatest(profilePic, joined, (name, profilePic, joined) => ({
+      name,
+      profilePic,
+      joined
+    }))
+  );
 
   // observable providing an array of all messages
   const messages = messagesInput.pipe(
@@ -45,6 +58,10 @@ export const createStateManager = () => {
     usersInput,
     messages,
     users,
-    messageCount
+    messageCount,
+    loginState,
+    userName,
+    profilePic,
+    joined
   };
 };
