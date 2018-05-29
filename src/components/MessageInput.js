@@ -1,5 +1,6 @@
 import * as React from "react";
 import styled from "react-emotion";
+import { Button } from "./Button";
 
 const Wrapper = styled("div")({
   display: "flex",
@@ -12,7 +13,6 @@ const Wrapper = styled("div")({
 const Textarea = styled("textarea")({
   backgroundColor: "#424242",
   color: "rgba(255, 255, 255, 0.8)",
-  marginLeft: "10px",
   fontSize: "14px",
   padding: "8px 16px",
   border: "none",
@@ -21,23 +21,8 @@ const Textarea = styled("textarea")({
   borderRadius: "8px"
 });
 
-const SendButton = styled("button")({
-  marginLeft: "16px",
-  backgroundColor: "#2518c6",
-  color: "white",
-  cursor: "pointer",
-  borderRadius: "8px",
-  border: "none",
-  outline: "none",
-  fontSize: "14px",
-  fontWeight: "bold",
-  ":hover": {
-    backgroundColor: "#4538e6"
-  },
-  ":active,:focus": {
-    color: "#e41200",
-    backgroundColor: "#4538e6"
-  }
+const SendButton = styled(Button)({
+  marginLeft: "16px"
 });
 
 export class MessageInput extends React.Component {

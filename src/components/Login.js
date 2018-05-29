@@ -2,8 +2,9 @@ import * as React from "react";
 import styled from "react-emotion";
 import { Subject, from } from "rxjs";
 import { takeUntil, debounceTime } from "rxjs/operators";
-import { getOrCreateAnonymousUser, writeUserData, database } from "../firebase";
+import { getOrCreateAnonymousUser, writeUserData } from "../firebase";
 import { Loader } from "./Loader";
+import { Button } from "./Button";
 
 const Wrapper = styled("div")({
   display: "flex",
@@ -42,23 +43,7 @@ const Input = styled("input")(formElementBaseStyle, {
   color: "rgba(255, 255, 255, 0.8)"
 });
 
-const JoinButton = styled("button")(formElementBaseStyle, {
-  backgroundColor: "#2518c6",
-  color: "white",
-  cursor: "pointer",
-  fontWeight: "bold",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  ":hover": {
-    backgroundColor: "#4538e6"
-  },
-  ":active,:focus": {
-    color: "#e41200",
-    backgroundColor: "#4538e6"
-  }
-});
-
+const JoinButton = styled(Button)(formElementBaseStyle);
 export class Login extends React.Component {
   // initial state with no user and loading true
   state = {
@@ -78,7 +63,7 @@ export class Login extends React.Component {
           loading: false,
           chosenProfilePic: user.profilePic,
           chosenUserName: user.name,
-          userId: user.userId
+          userId: user.id
         });
       });
 

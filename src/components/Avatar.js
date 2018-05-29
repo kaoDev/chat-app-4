@@ -6,7 +6,8 @@ export const Avatar = styled("div")(
     height: "50px",
     width: "50px",
     backgroundColor: "#666",
-    borderRadius: "50%"
+    borderRadius: "50%",
+    backgroundSize: "contain"
   },
   ({ url, userName = "" }) => ({
     backgroundColor: generateColor(userName),

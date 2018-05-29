@@ -1,14 +1,14 @@
-import { Subject, from, BehaviorSubject } from "rxjs";
-import { scan, merge, map, combineLatest } from "rxjs/operators";
-import messagesJson from "./data/messages.json";
-import usersJson from "./data/users.json";
-
-const initialMessages = from(messagesJson);
-const initialUsers = from(usersJson);
+import { Subject, BehaviorSubject, merge } from "rxjs";
+import { scan, map, combineLatest, distinct } from "rxjs/operators";
+import {
+  pushMessage,
+  messagesStream,
+  usersObservable,
+  getInitialMessages
+} from "../firebase";
 
 export const createStateManager = () => {
   const messagesInput = new Subject();
-  const usersInput = new Subject();
 
   // BehaviorSubjects holds one value
   const userName = new BehaviorSubject("");
@@ -23,9 +23,13 @@ export const createStateManager = () => {
     }))
   );
 
+  messagesInput.subscribe(message => {
+    pushMessage(message);
+  });
+
   // observable providing an array of all messages
-  const messages = messagesInput.pipe(
-    merge(initialMessages),
+  const messages = merge(getInitialMessages(), messagesStream()).pipe(
+    distinct(data => data.key),
     // scan acts like reduce, but over time.
     // it always provides the last calculated value
     scan(
@@ -37,28 +41,16 @@ export const createStateManager = () => {
     )
   );
 
-  const messageCount = messages.pipe(map(messages => messages.length));
+  // subscribe to users database and write result in users subject
+  const users = usersObservable();
 
-  // observable providing an array of all messages
-  const users = usersInput.pipe(
-    merge(initialUsers),
-    // scan acts like reduce, but over time.
-    // it always provides the last calculated value
-    scan(
-      (state, user) => {
-        return state.concat(user);
-      },
-      // empty array as initial value
-      []
-    )
-  );
+  const usersCount = users.pipe(map(users => users.length));
 
   return {
     messagesInput,
-    usersInput,
     messages,
     users,
-    messageCount,
+    usersCount,
     loginState,
     userName,
     profilePic,

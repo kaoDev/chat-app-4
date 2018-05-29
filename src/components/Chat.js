@@ -4,6 +4,8 @@ import styled from "react-emotion";
 import { MessageInput } from "./MessageInput";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
+import { auth } from "firebase";
+import { Button } from "./Button";
 
 const Wrapper = styled("div")({
   display: "flex",
@@ -13,14 +15,19 @@ const Wrapper = styled("div")({
   maxWidth: "600px",
   height: "100vh",
   padding: "0 10px",
-  margin: "auto"
+  margin: "auto",
+  width: "100%"
 });
 
-const MessageCounter = styled("div")({
+const UsersCounter = styled("div")({
   fontSize: "20px",
   fontWeight: "bold",
   textAlign: "center",
   color: "white"
+});
+
+const LeaveButton = styled(Button)({
+  width: "100%"
 });
 
 export class Chat extends React.Component {
@@ -28,7 +35,7 @@ export class Chat extends React.Component {
   state = {
     messages: [],
     users: [],
-    count: 0
+    usersCount: 0
   };
 
   unMounts = new Subject();
@@ -44,10 +51,10 @@ export class Chat extends React.Component {
       .subscribe(users => {
         this.setState({ users });
       });
-    this.props.stateManager.messageCount
+    this.props.stateManager.usersCount
       .pipe(takeUntil(this.unMounts))
-      .subscribe(count => {
-        this.setState({ count });
+      .subscribe(usersCount => {
+        this.setState({ usersCount });
       });
   }
 
@@ -59,7 +66,7 @@ export class Chat extends React.Component {
   onMessage = message => {
     if (message && message.length > 0) {
       const messageData = {
-        user: 1,
+        user: auth().currentUser.uid,
         date: new Date().toUTCString(),
         message
       };
@@ -67,13 +74,18 @@ export class Chat extends React.Component {
     }
   };
 
+  leave = () => {
+    this.props.stateManager.joined.next(false);
+  };
+
   render() {
-    const { users, messages, count } = this.state;
+    const { users, messages, usersCount } = this.state;
 
     return (
       <Wrapper>
-        <MessageCounter>{count} messages</MessageCounter>
+        <UsersCounter>{usersCount} registered users</UsersCounter>
         <MessageInput onSend={this.onMessage} />
+        <LeaveButton onClick={this.leave}>leave chat</LeaveButton>
         <ChatList messages={messages} users={users} />
       </Wrapper>
     );
