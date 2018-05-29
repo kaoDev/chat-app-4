@@ -92,24 +92,6 @@ export function messagesStream() {
     "child_added",
     messageFromDataSnapshot
   );
-  return new Observable(observer => {
-    const callback = dataSnapshot => {
-      observer.next(dataSnapshot);
-    };
-
-    // notify observer on value changes
-    database(app)
-      .ref(MESSAGES_REF_NAME)
-      .limitToLast(1)
-      .on("child_added", callback);
-    // return unsubscribe function
-    return () => {
-      database(app)
-        .ref(MESSAGES_REF_NAME)
-        .limitToLast(1)
-        .off("child_added", callback);
-    };
-  }).pipe(map(data => messageFromDataSnapshot(data)));
 }
 
 export function getInitialMessages() {
