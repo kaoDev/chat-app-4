@@ -1,6 +1,6 @@
 import { initializeApp, auth, database } from "firebase";
 import { Observable, Subject } from "rxjs";
-import { debounceTime } from "rxjs/operators";
+import { throttleTime } from "rxjs/operators";
 
 const config = {
   apiKey: "AIzaSyDa8_azU5bB-I0jvf3nfGSQPi5CUA0HmZA",
@@ -35,7 +35,7 @@ export async function writeUserData(userId, name, profilePic) {
 
 const lastSeenSubject = new Subject();
 
-lastSeenSubject.pipe(debounceTime(500)).subscribe(() => {
+lastSeenSubject.pipe(throttleTime(500)).subscribe(() => {
   const userId = auth(app).currentUser.uid;
   database(app)
     .ref(`${USERS_REF_NAME}/${userId}/lastSeen`)
