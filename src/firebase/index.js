@@ -35,7 +35,7 @@ export async function writeUserData(userId, name, profilePic) {
 
 const lastSeenSubject = new Subject();
 
-lastSeenSubject.pipe(debounceTime(1)).subscribe(() => {
+lastSeenSubject.pipe(debounceTime(500)).subscribe(() => {
   const userId = auth(app).currentUser.uid;
   database(app)
     .ref(`${USERS_REF_NAME}/${userId}/lastSeen`)
