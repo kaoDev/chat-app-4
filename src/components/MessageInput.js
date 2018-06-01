@@ -1,6 +1,7 @@
 import * as React from "react";
 import styled from "react-emotion";
 import { Button } from "./Button";
+import { lastSeen } from "../firebase";
 
 const Wrapper = styled("div")({
   display: "flex",
@@ -55,9 +56,10 @@ export class MessageInput extends React.Component {
         <Textarea
           placeholder={"write a message..."}
           value={currentMessage}
-          onChange={event =>
-            this.setState({ currentMessage: event.currentTarget.value })
-          }
+          onChange={event => {
+            this.setState({ currentMessage: event.currentTarget.value });
+            lastSeen();
+          }}
         />
         <SendButton onClick={this.sendMessage}>send</SendButton>
       </Wrapper>

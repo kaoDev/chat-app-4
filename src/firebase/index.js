@@ -28,9 +28,22 @@ export async function writeUserData(userId, name, profilePic) {
     .set({
       id: userId,
       name,
-      profilePic
+      profilePic,
+      lastSeen: Date.now()
     });
 }
+
+const lastSeenSubject = new Subject();
+
+lastSeenSubject.pipe(debounceTime(1)).subscribe(() => {
+  const userId = auth(app).currentUser.uid;
+  database(app)
+    .ref(`${USERS_REF_NAME}/${userId}/lastSeen`)
+    .set(Date.now());
+});
+export const lastSeen = () => {
+  lastSeenSubject.next();
+};
 
 export async function getOrCreateAnonymousUser() {
   const anonymous = (await auth(app).signInAnonymously()).user;
@@ -102,4 +115,5 @@ export function pushMessage(message) {
       ...message,
       timestamp: database.ServerValue.TIMESTAMP
     });
+  lastSeen();
 }

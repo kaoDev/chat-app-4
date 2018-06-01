@@ -6,6 +6,7 @@ import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { auth } from "firebase";
 import { Button } from "./Button";
+import { UserList } from "./UserList";
 
 const Wrapper = styled("div")({
   display: "flex",
@@ -16,7 +17,8 @@ const Wrapper = styled("div")({
   height: "100vh",
   padding: "0 10px",
   margin: "auto",
-  width: "100%"
+  width: "100%",
+  position: "relative"
 });
 
 const UsersCounter = styled("div")({
@@ -27,7 +29,13 @@ const UsersCounter = styled("div")({
 });
 
 const LeaveButton = styled(Button)({
-  width: "100%"
+  width: "32px",
+  height: "32px",
+  textAlign: "center",
+  position: "absolute",
+  top: "8px",
+  right: "8px",
+  padding: 0
 });
 
 export class Chat extends React.Component {
@@ -84,8 +92,13 @@ export class Chat extends React.Component {
     return (
       <Wrapper>
         <UsersCounter>{usersCount} registered users</UsersCounter>
+        <UserList stateManager={this.props.stateManager} />
         <MessageInput onSend={this.onMessage} />
-        <LeaveButton onClick={this.leave}>leave chat</LeaveButton>
+        <LeaveButton onClick={this.leave}>
+          <span role="img" aria-labelledby="close icon">
+            ❌
+          </span>
+        </LeaveButton>
         <ChatList messages={messages} users={users} />
       </Wrapper>
     );
