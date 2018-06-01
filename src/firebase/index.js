@@ -1,6 +1,6 @@
 import { initializeApp, auth, database } from "firebase";
-import { Observable, from } from "rxjs";
-import { mergeMap, map } from "rxjs/operators";
+import { Observable, Subject } from "rxjs";
+import { debounceTime } from "rxjs/operators";
 
 const config = {
   apiKey: "AIzaSyDa8_azU5bB-I0jvf3nfGSQPi5CUA0HmZA",
@@ -88,33 +88,18 @@ export function messagesStream() {
   return observableFromDbRef(
     database(app)
       .ref(MESSAGES_REF_NAME)
-      .limitToLast(1),
+      .orderByChild("timestamp")
+      .limitToLast(50),
     "child_added",
     messageFromDataSnapshot
-  );
-}
-
-export function getInitialMessages() {
-  return from(
-    database(app)
-      .ref(MESSAGES_REF_NAME)
-      .orderByChild("date")
-      .limitToLast(50)
-      .once("value")
-  ).pipe(
-    mergeMap(dataBaseSnapshot => {
-      const snapshots = [];
-      dataBaseSnapshot.forEach(childSnapshot => {
-        snapshots.push(childSnapshot);
-      });
-      return snapshots;
-    }),
-    map(data => messageFromDataSnapshot(data))
   );
 }
 
 export function pushMessage(message) {
   database(app)
     .ref(MESSAGES_REF_NAME)
-    .push(message);
+    .push({
+      ...message,
+      timestamp: database.ServerValue.TIMESTAMP
+    });
 }

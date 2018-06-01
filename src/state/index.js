@@ -1,11 +1,6 @@
-import { Subject, BehaviorSubject, merge } from "rxjs";
-import { scan, map, combineLatest, distinct } from "rxjs/operators";
-import {
-  pushMessage,
-  messagesStream,
-  usersObservable,
-  getInitialMessages
-} from "../firebase";
+import { Subject, BehaviorSubject } from "rxjs";
+import { scan, map, combineLatest, tap } from "rxjs/operators";
+import { pushMessage, messagesStream, usersObservable } from "../firebase";
 
 export const createStateManager = () => {
   const messagesInput = new Subject();
@@ -28,8 +23,8 @@ export const createStateManager = () => {
   });
 
   // observable providing an array of all messages
-  const messages = merge(getInitialMessages(), messagesStream()).pipe(
-    distinct(data => data.key),
+  const messages = messagesStream().pipe(
+    tap(data => console.log(data.timestamp, data.message)),
     // scan acts like reduce, but over time.
     // it always provides the last calculated value
     scan(

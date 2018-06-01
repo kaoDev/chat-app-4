@@ -1,7 +1,7 @@
-import { parse } from "date-fns";
 import * as React from "react";
 import styled, { css } from "react-emotion";
 import { User } from "./User";
+import { parse } from "date-fns";
 
 const Wrapper = styled("div")({
   position: "relative",
@@ -42,7 +42,7 @@ export const Message = ({ user, date, message }) => (
       profilePic={user.profilePic}
     />
     <MessageWrapper>
-      <Date>{parse(date).toLocaleDateString()}</Date>
+      <Date>{parse(date).toLocaleString()}</Date>
       <div>{message}</div>
     </MessageWrapper>
   </Wrapper>

@@ -6,7 +6,9 @@ import { injectGlobal } from "emotion";
 injectGlobal({
   body: {
     fontFamily: `Montserrat, sans-serif`,
-    backgroundColor: "#212121"
+    backgroundColor: "#212121",
+    color: "white",
+    margin: 0
   }
 });
 

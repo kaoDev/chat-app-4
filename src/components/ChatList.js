@@ -19,9 +19,11 @@ const searchUser = (users, userId) => {
 
 export const ChatList = ({ users, messages }) => (
   <Wrapper>
-    {messages.reverse().map((message, index) => {
-      const user = searchUser(users, message.user);
-      return <Message key={message.key} {...message} user={user} />;
-    })}
+    {messages
+      .map((message, index) => {
+        const user = searchUser(users, message.user);
+        return <Message key={message.key} {...message} user={user} />;
+      })
+      .reverse()}
   </Wrapper>
 );
